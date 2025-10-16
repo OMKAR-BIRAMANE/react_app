@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
 import Button from '../../../components/ui/Button';
+import Card3D from '../../../components/ui/Card3D';
 
 const ProjectCard = ({ 
   project, 
@@ -58,14 +59,16 @@ const ProjectCard = ({
     }
   };
 
+  const createdDate = project?.createdAt ? new Date(project?.createdAt) : null;
+  const monthLabel = createdDate ? createdDate.toLocaleString('en-US', { month: 'short' }).toUpperCase() : undefined;
+  const dayLabel = createdDate ? String(createdDate.getDate()) : undefined;
+
   return (
     <>
-      <div className={`bg-card border border-border rounded-lg p-6 hover:shadow-lg transition-all duration-200 hover:-translate-y-1 ${
-        isSelected ? 'ring-2 ring-primary border-primary' : ''
-      }`}>
+      <div className={`rounded-lg ${isSelected ? 'ring-2 ring-primary' : ''}`}>
         {/* Selection Checkbox */}
         {showSelection && (
-          <div className="flex justify-end mb-3">
+          <div className="flex justify-end mb-2">
             <button
               onClick={() => onSelect && onSelect(project?.id)}
               className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
@@ -78,80 +81,64 @@ const ProjectCard = ({
           </div>
         )}
 
-        {/* Project Thumbnail */}
-        <div className="mb-4">
-          <div className="w-full h-32 bg-muted rounded-lg overflow-hidden">
-            {project?.diagramPreview ? (
-              <Image
-                src={project?.diagramPreview}
-                alt={`${project?.name} diagram preview`}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <Icon name="FileText" size={32} className="text-text-secondary" />
-              </div>
-            )}
-          </div>
-        </div>
+        {/* 3D Card */}
+        <Card3D
+          title={project?.name}
+          description={project?.description}
+          ctaText="View"
+          onCtaClick={handleView}
+          month={monthLabel}
+          date={dayLabel}
+        >
+          <div className="space-y-3">
+            {/* Project Thumbnail */}
+            <div className="w-full h-24 bg-[#d8ff87] rounded-md overflow-hidden">
+              {project?.diagramPreview ? (
+                <Image
+                  src={project?.diagramPreview}
+                  alt={`${project?.name} diagram preview`}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <Icon name="FileText" size={28} className="text-[#141414]" />
+                </div>
+              )}
+            </div>
 
-        {/* Project Info */}
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold text-text-primary mb-2 line-clamp-2">
-            {project?.name}
-          </h3>
-          
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm text-text-secondary">
-              Created {formatDate(project?.createdAt)}
-            </span>
-            <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getProjectTypeColor(project?.type)}`}>
-              {project?.type || 'Web'}
-            </span>
-          </div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-[#141414]">
+                Created {formatDate(project?.createdAt)}
+              </span>
+              <span className={`px-2 py-1 text-[10px] font-bold rounded-full border ${getProjectTypeColor(project?.type)}`}>
+                {project?.type || 'Web'}
+              </span>
+            </div>
 
-          {/* Tech Stack */}
-          {project?.techStack && project?.techStack?.length > 0 && (
-            <div className="mb-3">
+            {/* Tech Stack */}
+            {project?.techStack && project?.techStack?.length > 0 && (
               <div className="flex flex-wrap gap-1">
                 {project?.techStack?.slice(0, 3)?.map((tech, index) => (
                   <span
                     key={index}
-                    className="px-2 py-1 text-xs bg-muted text-text-secondary rounded"
+                    className="px-2 py-1 text-[10px] bg-[#d8ff87] text-[#141414] rounded"
                   >
                     {tech}
                   </span>
                 ))}
                 {project?.techStack?.length > 3 && (
-                  <span className="px-2 py-1 text-xs bg-muted text-text-secondary rounded">
+                  <span className="px-2 py-1 text-[10px] bg-[#d8ff87] text-[#141414] rounded">
                     +{project?.techStack?.length - 3} more
                   </span>
                 )}
               </div>
-            </div>
-          )}
+            )}
+          </div>
+        </Card3D>
 
-          {/* Description */}
-          {project?.description && (
-            <p className="text-sm text-text-secondary line-clamp-2 mb-3">
-              {project?.description}
-            </p>
-          )}
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex items-center justify-between pt-3 border-t border-border">
+        {/* Secondary Action Buttons */}
+        <div className="flex items-center justify-between pt-3">
           <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleView}
-              iconName="Eye"
-              iconPosition="left"
-              iconSize={14}
-            >
-              View
-            </Button>
             <Button
               variant="ghost"
               size="sm"
@@ -160,7 +147,6 @@ const ProjectCard = ({
               iconSize={14}
             />
           </div>
-          
           <Button
             variant="ghost"
             size="sm"

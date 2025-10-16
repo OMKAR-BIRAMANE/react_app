@@ -1,5 +1,6 @@
 import React from 'react';
 import Icon from '../../../components/AppIcon';
+import Card3D from '../../../components/ui/Card3D';
 
 const FeatureCards = () => {
   const features = [
@@ -75,28 +76,24 @@ const FeatureCards = () => {
         {/* Feature Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features?.map((feature) => (
-            <div
+            <Card3D
               key={feature?.id}
-              className="group bg-card border border-border rounded-xl p-6 hover:shadow-lg hover:border-primary/20 transition-all duration-300 hover:-translate-y-1"
+              title={feature?.title}
+              description={feature?.description}
+              ctaText="Learn More"
             >
-              {/* Icon */}
-              <div className={`w-12 h-12 rounded-lg flex items-center justify-center mb-4 border ${getColorClasses(feature?.color)}`}>
-                <Icon name={feature?.icon} size={24} strokeWidth={2} />
+              <div className="space-y-3">
+                <div className={`w-12 h-12 rounded-lg flex items-center justify-center border ${getColorClasses(feature?.color)}`}>
+                  <Icon name={feature?.icon} size={24} strokeWidth={2} />
+                </div>
+                <h3 className="text-xl font-semibold text-[#141414]">
+                  {feature?.title}
+                </h3>
+                <p className="text-[#141414] leading-relaxed text-sm">
+                  {feature?.description}
+                </p>
               </div>
-
-              {/* Content */}
-              <h3 className="text-xl font-semibold text-text-primary mb-3 group-hover:text-primary transition-colors duration-200">
-                {feature?.title}
-              </h3>
-              <p className="text-text-secondary leading-relaxed">
-                {feature?.description}
-              </p>
-
-              {/* Hover Arrow */}
-              <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                <Icon name="ArrowRight" size={16} className="text-primary" strokeWidth={2} />
-              </div>
-            </div>
+            </Card3D>
           ))}
         </div>
       </div>
